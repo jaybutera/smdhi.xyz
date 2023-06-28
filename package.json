@@ -39,6 +39,8 @@
 	"type": "module",
 	"dependencies": {
 		"gray-matter": "^4.0.3",
-		"latex.js": "^0.12.6"
+		"katex": "^0.16.8",
+		"latex.js": "^0.12.6",
+		"marked": "^5.1.0"
 	}
 }

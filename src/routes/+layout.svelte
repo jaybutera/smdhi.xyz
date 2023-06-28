@@ -46,6 +46,11 @@
 		text-decoration: underline;
 	}
 
+    mjx-container {
+        margin: auto;
+        width: 50%;
+    }
+
 	.small {
 		font-size: 1.6rem;
 	}

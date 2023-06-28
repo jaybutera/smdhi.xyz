@@ -12,27 +12,29 @@ This last point especially was always stated quite vaguely and I wanted to get a
 
 First of all you start with a list of tokens (the input - note that a token sometimes represents more or less than one whole word).
 
-The dog barks
-$t_1$ $t_2$ $t_3$
+$
+\begin{array}{ccc}
+    the & dog & barks \\
+    t_1 & t_2 & t_3
+\end{array}
+$
 
 Tokens are just scalar numbers between 1 and the number of possible tokens (53,000ish for GPT2). These are embedded at the beginning of the transformer network into "embedding" vectors. Embedding vectors have some pre-specified dimension where each dimension represents some learned "feature". This post is not about embeddings so we'll just name each embedding vector derived from every token.
 
 $e_1$ $e_2$ $e_3$
 
-Now we reach the self-attention layer in the transformer architecture. Each embedding is passed into 3 different linear transformations (feed-forward layer); these are the query, Q, the key, K, and the value, V, transformations. Take note that the linear transformation for a feed-forward layer ($W_Q e_1 + b_Q$) produces a new vector, Q_1. Again we'll abstract away the vector property and just use the name Q_1.
+Now we reach the self-attention layer in the transformer architecture. Each embedding is passed into 3 different linear transformations (feed-forward layer); these are the query, $Q$, the key, $K$, and the value, $V$, transformations. Take note that the linear transformation for a feed-forward layer ($W_Q e_1 + b_Q$) produces a new vector, $Q_1$. Again we'll abstract away the vector property and just use the name $Q_1$.
 
 We multiply the query and key vectors (also called an [outer product](https://en.wikipedia.org/wiki/Outer_product) operation).
 
-$Q x K^T = $
-\(
-\begin{bmatrix}
+$Q \times K^T = \begin{bmatrix}
     q_1 k_1 & q_1 k_2 & q_1 k_3 \\
     q_2 k_1 & q_2 k_2 & q_2 k_3 \\
     q_3 k_1 & q_3 k_2 & q_3 k_3
 \end{bmatrix}
-\)
+$
 
-In our example, Q is of shape (3x1) and K^T is (1x3). So the final matrix is (3x3). Where every element is a [dot product](https://en.wikipedia.org/wiki/Dot_product) of a different pair of query and key. See this for yourself in the matrix.
+In our example, $Q$ is of shape $(3\times1)$ and $K^T$ is $(1\times3)$. So the final matrix is $(3\times3)$. Where every element is a [dot product](https://en.wikipedia.org/wiki/Dot_product) of a different pair of query and key. See this for yourself in the matrix.
 
 Again we are not covering the concept of embeddings here but its pretty easy to see why the dot product of two embeddings produces a "similarity" number representing how close those two concepts are to eachother. If you don't already know this it's a worthy exercise to figure out for yourself given just what I said about "features".
 
@@ -40,28 +42,45 @@ So now we have a matrix of similarity scores between every query/key pair. Next 
 
 There is actually a "scaling" that happens before normalization but this is very trivial and actually explained completely in most of the existing guides on self-attention.
 
-Now in the final step, the similarity matrix is multiplied by the value vector that was made at the beginning. For the sake of illustration let's forget about the normalization/scaling for a moment and just work with the three core vectors; Q,K,V.
+Now in the final step, the similarity matrix is multiplied by the value vector that was made at the beginning. For the sake of illustration let's forget about the normalization/scaling for a moment and just work with the three core vectors; $Q$,$K$,$V$.
 
-() x (v_1 v_2 v_3) = ()
+$
+\begin{bmatrix}
+    q_1 k_1 & q_1 k_2 & q_1 k_3 \\
+    q_2 k_1 & q_2 k_2 & q_2 k_3 \\
+    q_3 k_1 & q_3 k_2 & q_3 k_3
+\end{bmatrix}
+ \times
+\begin{bmatrix}
+    v_1 \\
+    v_2 \\
+    v_3 
+\end{bmatrix} =
+\begin{bmatrix}
+    q_1k_1v_1 + q_1k_2v_2 + q_1k_3v_3 \\
+    q_2k_1v_1 + q_2k_2v_2 + q_2k_3v_3 \\
+    q_3k_1v_1 + q_3k_2v_2 + q_3k_3v_3
+\end{bmatrix}
+$
 
-See how the keys and values are paired up together? Each row measures one query with everying key-value pairing. This is where you might get the intuition of a "dictionary". Essentially, if a query is similar to a key, k_n, the corresponding value, v_n, is magnified. (q_n * k_n) is between 0 and 1 but v_n can be any value and so likely will contain the actual relevant information. Whereas the query and key serve only to select the value.
+See how the keys and values are paired up together? Each row measures one query with every key-value pairing. This is where you might get the intuition of a "dictionary". If a query is similar to a key, $k_n$, the corresponding value, $v_n$, is magnified. ($q_n * k_n$) is between 0 and 1 but $v_n$ can be any value and so likely will contain the actual relevant information. Whereas the query and key serve only to select the value.
 
 Where this analogy of the dictionary loses it's significance (if you haven't already seen it), is that a query may be similar to two, or even more, different keys. The output of a row is not just a single value but a linear combination of all of them - weighted by their similarity-probabilities. A dictionary retrieves a single value for a key but self-attention is composing semantic concepts in an "additive" space.
 
-Now someone might argue "its the single query that is mapped to a single value." And that could acceptable if you ignore the key awkwardness. But the analogy still "black-boxes" the self-attention mechanism and hides away what's likely the key (no pun intended) property of the self-attention mechanism, which is the additive logic of semantic concepts.
+You might suppose the dictionary values are not actually the v elements but instead more abstract linear combinations of all of them which the self-attention is learning to represent. But this is not so different from saying a neural network is like a learned function which maps inputs to trained values. It black-boxes the mechanisms and gives no incite into what is actually going on inside. It seems likely (to me) that the important concept worth focusing on in self-attention is the additive logic of semantic concepts.
 
 As an example, remember that keys in self-attention are the other "words" (tokens) from the input. Imagine two keys:
 
-k_1 = river, k_2 = bank, k_3 = withdraw
+$k_1$ = river, $k_2$ = bank, $k_3$ = withdraw
 
-v_2 is likely a concept in this space which is v_1 distance away from a semantic meaning of "edge of a river" (v_1 + v_2) while at the same time being a distance of v_3 away from the concept of "asset retrieval" (v_2 + v_3).
+$v_2$ is likely a concept in this space which is $v_1$ distance away from a semantic meaning of "edge of a river" ($v_1 + v_2$) while at the same time being a distance of $v_3$ away from the concept of "asset retrieval" ($v_2 + v_3$).
 
-In self-attention the linear transformations Q, K, and V are learned parameters so the model is able to learn and "arrive" at this additive space of semantic concepts on its own.
+In self-attention the linear transformations $Q$, $K$, and $V$ are learned parameters so the model is able to learn and "arrive" at this additive space of semantic concepts on its own.
 
-Self-attention is adding together concepts like "the" + "dog" + "barks". Some concepts like "gold is gold" (more generally a+b+a) might be difficult to encode in a single self-attention layer. Unless two distinct values are the same, v_1=v_2. Since there is no way to duplicate a single value. This is where the stacked self-attention architecture (there are [12 in GPT2](https://github.com/huggingface/transformers/blob/8e164c5400b7b413c7b8fb32e35132001effc970/src/transformers/models/gpt2/configuration_gpt2.py#L145)) may be useful. While the first layer encodes a+b, the second layer may have the use the value v_1=a+b and v_2=a to get a+b+a. Through stacked self-attention the network becomes a complex computation graph of semantic concepts. It may be that earlier layers encode simple concepts close to the original token embeddings while deeper layers are manipulating complex expressions of semantics.
+Self-attention is adding together concepts like "the" + "dog" + "barks". Some concepts like "gold is gold" (more generally $a+b+a$) might be difficult to encode in a single self-attention layer. Unless two distinct values are the same, $v_1=v_2$. Since there is no way to duplicate a single value. This is where the stacked self-attention architecture (there are [12 in GPT2](https://github.com/huggingface/transformers/blob/8e164c5400b7b413c7b8fb32e35132001effc970/src/transformers/models/gpt2/configuration_gpt2.py#L145)) may be useful. While the first layer encodes $a+b$, the second layer may have the use the value $v_1=a+b$ and $v_2=a$ to get $a+b+a$. Through stacked self-attention the network becomes a complex computation graph of semantic concepts. It may be that earlier layers encode simple concepts close to the original token embeddings while deeper layers are manipulating complex expressions of semantics.
 
 I'm honestly not so sure what the benefits are of deeply stacked self-attention layers vs short-and-wide. The above is just one intuition. Another may be that the "additive space" of semantic concepts is extremely large or infinite. And by separating self-attention modules (this is done not just vertically but also horizontally with multi-head attention) we are allowing each module to converge on a small subset of concepts (specifially the value vector it arrives on). Implications for ordering of the layers is an interesting path to explore.
 
-It's been very exciting for me to see self-attention in this way. Less of a "dictionary" and more like a very rudimentary form a logic module! Now this in itself is a pretty big jump to claim and I'd like to explain what I mean by this in a new article. But to give a taste for the impatients - I'll point to the work of Chris Eliasmith in "How to Build a Brain", specifically his semantic pointer hypothesis, which he developed before the transformer architecture existed.
+It's exciting for me to see self-attention in this new context. Less of a "dictionary" and more like a very rudimentary form a logic module! Now this in itself is a pretty big jump to claim and I'd like to explain what I mean by this in a new article. But to give a taste for the impatients - I'll point to the work of Chris Eliasmith in "How to Build a Brain", specifically his semantic pointer hypothesis, which he developed before the transformer architecture existed.
 
-In fact the majority of AI as a field has been developed from the study of linguistics. From John McCarthy's (who coined the term artificial intelligence) LISP in the 1950s, to Alan Turing's ponderings of intelligence machines in the early 20th century. Which in turn was based on the logicians of his time and even back to Aristotle and first-order logic! The history runs deep and it is exciting for me to see the modern field of machine learning converging into the realm of logic and symbolic manipulation. It's a good sign when our machines not only revolutionize society, as I think it's hard to argue against at this point that large language models are doing, but also manage to validate and actualize the dreams of our scientific ancestors.
+In fact the majority of AI as a field has been developed from the study of linguistics. From John McCarthy's (who coined the term artificial intelligence) LISP in the 1950s, to Alan Turing's ponderings of intelligence machines in the early 20th century. Which in turn was based on the logicians of his time and even back to Aristotle and first-order logic! The history runs deep and it is exciting to see the modern field of machine learning converging and potentially utilizing the realm of logic and symbolic manipulation. It's a good sign when our machines not only revolutionize society, as I think it's hard to argue against at this point that large language models are doing, but also manage to validate and actualize the dreams of our scientific ancestors.
