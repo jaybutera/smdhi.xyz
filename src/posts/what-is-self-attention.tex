@@ -5,7 +5,6 @@ date: '2023-06-24'
 published: true
 ---
 
-$ x_1 $
 There are alot of articles explaining self-attention in crude math. Some break it into digestible steps but none I've seen have depicted an intuition into what is actually going on and why the math is doing what its doing. Worst of all I've seen it repeated over and over that self-attention is like a "dictionary" where there are queries, keys and values.
 
 This last point especially was always stated quite vaguely and I wanted to get an intuition for it. So I finally sat down this morning and did the math myself. Step by step it's quite easy as I'll show. And in doing this I finally came to understand the intuition of queries, keys, and values. My conclusion is that explaining self-attention as a "dictionary" is a massive error and obfuscates what is likely the core mechanism in self-attention. So let's get into it now.
