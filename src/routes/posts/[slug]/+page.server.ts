@@ -4,7 +4,7 @@ import path from 'path';
 import { slugFromPath } from '$lib/slugFromPath';
 import { error } from '@sveltejs/kit';
 import matter from 'gray-matter';
-import { marked } from 'marked';
+//import { marked } from 'marked';
 //import katex from 'katex';
 
 export async function load({ params }) {
