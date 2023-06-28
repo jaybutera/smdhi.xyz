@@ -12,6 +12,8 @@
 
 <PageHead title="Home" description="" />
 
+<p>I'm Samadhi ✌️ You can reach me on <a href="https://t.me/notyere">Telegram</a> or go to my <a href="https://github.com/jaybutera">Github</a></p>
+
 {#each data.posts as { slug, title, description, date }}
 	<Article>
 		<ArticleTitle {slug} {title} />
