@@ -2,7 +2,7 @@
 	export let title: string;
 	export let description: string;
 
-	const siteTitle = "Jay\'s Shit";
+	const siteTitle = "Samadhi posts";
 	const formattedTitle = title ? `${title} | ${siteTitle}` : siteTitle;
 </script>
 

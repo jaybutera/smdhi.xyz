@@ -10,7 +10,7 @@
 	export let data: PageData;
 </script>
 
-<PageHead title="Home" description="test" />
+<PageHead title="Home" description="" />
 
 {#each data.posts as { slug, title, description, date }}
 	<Article>

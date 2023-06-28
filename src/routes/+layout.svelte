@@ -3,7 +3,7 @@
 </script>
 
 <header>
-	<a href="/"><h1 class:small={$page.url.pathname !== '/'}>SvelteKit + MDsveX Blog</h1></a>
+	<a href="/"><h1 class:small={$page.url.pathname !== '/'}>Placeholder Title Until I Think About It</h1></a>
 </header>
 
 <main>
