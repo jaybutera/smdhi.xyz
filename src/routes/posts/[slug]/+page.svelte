@@ -2,6 +2,7 @@
 	import type { PageData } from './$types';
 	import type { SvelteComponentTyped } from 'svelte/internal';
 
+    import MathJaxWrapper from '$lib/components/MathJaxWrapper.svelte';
     import Latex from '$lib/components/Latex.svelte';
 	import PageHead from '$lib/components/PageHead.svelte';
 	import ArticleTitle from '$lib/components/ArticleTitle.svelte';
@@ -16,4 +17,6 @@
 <ArticleTitle title={data.frontmatter.title} />
 <ArticleMeta author={data.frontmatter.author} date={data.frontmatter.date} />
 
-<Latex {content} />
+<MathJaxWrapper>
+    <Latex {content} />
+</MathJaxWrapper>
