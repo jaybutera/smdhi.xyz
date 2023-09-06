@@ -13,9 +13,11 @@
 	$: content = data.content;
 </script>
 
-<PageHead title={data.frontmatter.title} description={data.frontmatter.description} />
-<ArticleTitle title={data.frontmatter.title} />
-<ArticleMeta author={data.frontmatter.author} date={data.frontmatter.date} />
+<!--
+    <PageHead title={data.frontmatter.title} description={data.frontmatter.description} />
+    <ArticleTitle title={data.frontmatter.title} />
+    <ArticleMeta author={data.frontmatter.author} date={data.frontmatter.date} />
+-->
 
 <MathJaxWrapper>
     <Latex {content} />
