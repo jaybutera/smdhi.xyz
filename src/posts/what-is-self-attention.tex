@@ -66,7 +66,7 @@ See how the keys and values are paired up together? Each row measures one query 
 
 Where this analogy of the dictionary loses it's significance (if you haven't already seen it), is that a query may be similar to two, or even more, different keys. The output of a row is not just a single value but a linear combination of all of them - weighted by their similarity-probabilities. A dictionary retrieves a single value for a key but self-attention is composing semantic concepts in an "additive" space.
 
-You might suppose the dictionary values are not actually the v elements but instead more abstract linear combinations of all of them which the self-attention is learning to represent. But this is not so different from saying a neural network is like a learned function which maps inputs to trained values. It black-boxes the mechanisms and gives no incite into what is actually going on inside. It seems likely (to me) that the important concept worth focusing on in self-attention is the additive logic of semantic concepts.
+You might suppose the dictionary values are not actually the v elements but instead more abstract linear combinations of all of them which the self-attention is learning to represent. But this is not so different from saying a neural network is like a learned function which maps inputs to trained values. It black-boxes the mechanisms and gives no incite into what is actually going on inside. It seems likely (to me) that the important concept worth focusing on in self-attention is the additive logic of semantic concepts; conceptual logic.
 
 As an example, remember that keys in self-attention are the other "words" (tokens) from the input. Imagine two keys:
 
