@@ -12,7 +12,14 @@
 
 <PageHead title="Home" description="" />
 
-<p>I'm Samadhi ✌️ Join my channel or contact me on Telegram <a href="https://t.me/nunyaself">@notyere</a> or go to my <a href="https://github.com/jaybutera">Github</a>.</p>
+<header>
+    <a href="/"><h1>Personal Archive</h1></a>
+</header>
+
+<p>I'm Samadhi 👾</p>
+<p>This is a collection of personal experimental writings. No particular structure or theme. Many contradictions and conflicting thoughts.</p>
+
+<h3><a href="/heap">Take a dive in the Heap</a></h3>
 
 {#each data.posts as { slug, title, description, date }}
 	<Article>

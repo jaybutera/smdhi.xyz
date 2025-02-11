@@ -2,9 +2,11 @@
 	import { page } from '$app/stores';
 </script>
 
+<!--
 <header>
 	<a href="/"><h1 class:small={$page.url.pathname !== '/'}>Placeholder Title Until I Think About It</h1></a>
 </header>
+-->
 
 <main>
 	<slot />
